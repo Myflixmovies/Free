@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080a12">
+<title>MYFLIX — Movies & Series</title>
+<style>
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#070910;color:#f7f8fc;font-family:Inter,system-ui,Arial,sans-serif}
+button,input,select{font:inherit}button{cursor:pointer}.wrap{max-width:1400px;margin:auto;padding:0 18px}
+header{position:sticky;top:0;z-index:50;background:rgba(7,9,16,.84);backdrop-filter:blur(18px);border-bottom:1px solid #202536}
+.nav{min-height:64px;display:flex;align-items:center;gap:14px}.logo{font-size:24px;font-weight:950;letter-spacing:1px;background:linear-gradient(90deg,#8b5cff,#00d9ff);color:transparent;background-clip:text}
+.links{display:flex;gap:6px;margin-left:auto}.links a{color:#bfc7da;text-decoration:none;padding:9px 11px;border-radius:10px}.links a:hover{background:#171c2a;color:white}
+.search{width:300px;background:#111625;border:1px solid #272d40;color:white;border-radius:11px;padding:10px 12px;outline:0}.search:focus{border-color:#502ded}
+.hero{padding:28px 0}.heroBox{min-height:390px;border:1px solid #252b3c;border-radius:25px;overflow:hidden;display:flex;align-items:end;padding:38px;position:relative;background:linear-gradient(90deg,rgba(5,7,13,.97),rgba(5,7,13,.62),rgba(5,7,13,.2)),url("images/hero.jpg") center/cover}
+.hero h1{font-size:clamp(40px,7vw,76px);line-height:.95;margin:10px 0 15px}.hero p{max-width:650px;color:#c1c8d8;line-height:1.55}.badge{font-size:11px;font-weight:900;padding:7px 10px;border-radius:99px;background:#211b43;color:#d9d1ff;border:1px solid #51408e}
+.btn{border:0;border-radius:11px;padding:11px 16px;font-weight:850;margin:7px 5px 0 0}.primary{background:linear-gradient(90deg,#5832d3,#00bfe9);color:#fff}.ghost{background:linear-gradient(90deg,#5832d3,#00bfe9);color:#fff;border:1px solid #292f40}
+section{padding:18px 0 30px}.head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:15px}.head h2{margin:0;font-size:27px}.muted{color:#8f98ad;font-size:12px}
+.filters{display:flex;gap:7px;flex-wrap:wrap}.filter{background:#111625;color:#bbc3d4;border:1px solid #252b3c;padding:8px 11px;border-radius:9px}.filter.active{background:#292052;border-color:#6950c0;color:#fff}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:15px}.card{background:#101522;border:1px solid #23293a;border-radius:16px;overflow:hidden;transition:.22s}.card:hover{transform:translateY(-4px);border-color:#5c4ba0}
+.poster{aspect-ratio:2/3;background:#151a27;position:relative}.poster img{width:100%;height:100%;object-fit:cover;display:block}.fallback{height:100%;display:grid;place-items:center;color:#69738b;font-weight:900}.tag{position:absolute;top:9px;left:9px;background:#05070bdd;padding:5px 8px;border-radius:7px;font-size:10px;font-weight:900}
+.body{padding:12px}.title{font-weight:850;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.meta{display:flex;gap:7px;flex-wrap:wrap;color:#9099ad;font-size:11px;margin:7px 0}.desc{font-size:12px;color:#aeb6c8;line-height:1.45;margin:8px 0 11px}.watch{width:100%;border:0;border-radius:9px;padding:9px;background:linear-gradient(90deg,#7655ff,#00bde7);color:white;font-weight:850}
+.seriesGrid{display:grid;grid-template-columns:1fr 1fr;gap:17px}.series{background:#101522;border:1px solid #242a3b;border-radius:18px;overflow:hidden}.seriesTop{display:grid;grid-template-columns:190px 1fr}.seriesPoster{min-height:285px;background:#151a27}.seriesPoster img{width:100%;height:100%;object-fit:cover}.info{padding:18px}.status{display:inline-block;font-size:10px;font-weight:900;padding:5px 8px;border-radius:7px;background:#102b2f;color:#6ce8f1}.info h3{font-size:23px;margin:9px 0}.rating{color:#ffd76a;font-weight:900}.seasons{display:flex;gap:7px;flex-wrap:wrap;margin-top:13px}.season{background:#121827;color:#c5ccdc;border:1px solid #293044;border-radius:8px;padding:8px 10px;font-size:11px;font-weight:800}.season.active{background:#2a2054;border-color:#6750ba;color:#fff}.episodes{border-top:1px solid #252b3b;padding:10px 15px}.ep{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #202638}.ep:last-child{border-bottom:0}.epname{font-size:13px;font-weight:750}.epsub{font-size:10px;color:#7f899f;margin-top:3px}.epwatch{border:0;background:#242b3d;color:white;border-radius:8px;padding:8px 10px;font-size:11px;font-weight:850}.empty{display:none;text-align:center;color:#7e879a;border:1px dashed #2b3142;padding:28px;border-radius:14px}
+footer{text-align:center;color:#1651e6;border-top:1px solid #1f2535;padding:25px 15px;font-size:11px}
+.modal{position:fixed;inset:0;background:#000c;backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:14px;z-index:100}.modal.show{display:flex}.player{width:min(1100px,100%);background:#0d111b;border:1px solid #2a3041;border-radius:17px;overflow:hidden}.phead{display:flex;justify-content:space-between;align-items:center;padding:11px 13px;border-bottom:1px solid #252b3a}.close{border:0;background:#202638;color:white;border-radius:8px;width:34px;height:34px;font-size:20px}.video{background:#000;aspect-ratio:16/9}.video video{width:100%;height:100%;display:block;background:#000}.controls{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:12px}.control{background:#151b2a;border:1px solid #2a3041;color:white;border-radius:8px;padding:8px 10px}.range{width:120px;accent-color:#7b5cff}.hint{color:#7f899d;font-size:10px;line-height:1.45;padding:0 13px 13px}
+@media(max-width:1150px){.grid{grid-template-columns:repeat(4,1fr)}}@media(max-width:850px){.nav{flex-wrap:wrap}.search{order:3;width:100%}.links{margin-left:0}.grid{grid-template-columns:repeat(3,1fr)}.seriesGrid{grid-template-columns:1fr}}
+@media(max-width:600px){.wrap{padding:0 12px}.hero{padding:15px 0}.heroBox{min-height:430px;padding:25px}.grid{grid-template-columns:repeat(2,1fr);gap:10px}.seriesTop{grid-template-columns:125px 1fr}.seriesPoster{min-height:210px}.info{padding:12px}.info h3{font-size:18px}.head{align-items:start;flex-direction:column}.controls{gap:6px}.range{width:90px}}
+@media(max-width:390px){.grid{grid-template-columns:1fr}.seriesTop{grid-template-columns:110px 1fr}}
+
+.accountBtn{border:1px solid #302f49;background:#171425;color:#fff;border-radius:10px;padding:9px 12px;font-weight:850;white-space:nowrap}
+.accountBtn:hover{background:#241d3d}
+.accountStatus{font-size:11px;color:#7ee7bd;margin-top:7px}
+.accountModal{position:fixed;inset:0;background:#000c;backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:14px;z-index:120}
+.accountModal.show{display:flex}
+.accountBox{width:min(460px,100%);background:#0d111b;border:1px solid #2a3041;border-radius:18px;padding:20px;box-shadow:0 20px 70px #0008}
+.accountHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+.accountHead h3{margin:0;font-size:22px}
+.accountClose{border:0;background:#202638;color:#fff;border-radius:8px;width:34px;height:34px;font-size:20px}
+.accountStep{display:none}
+.accountStep.active{display:block}
+.accountBox label{display:block;color:#aeb6c8;font-size:12px;margin:12px 0 6px}
+.accountBox input{width:100%;background:#111625;border:1px solid #292f40;color:#fff;border-radius:10px;padding:11px;outline:0}
+.accountBox input:focus{border-color:#6b50d0}
+.accountAction{width:100%;border:0;border-radius:10px;padding:11px;margin-top:12px;background:linear-gradient(90deg,#5832d3,#00bfe9);color:#fff;font-weight:850}
+.keyAction{background:#151b2a;border:1px solid #2a3041}
+.accountHint{color:#7f899d;font-size:11px;line-height:1.5;margin:10px 0}
+.accountMsg{min-height:18px;color:#ffcc70;font-size:11px;margin-top:9px}
+.profileGrid{display:grid;gap:8px;margin-top:10px}
+.profileItem{background:#111625;border:1px solid #252b3c;border-radius:10px;padding:10px;color:#cbd2e0;font-size:12px}
+.subscriptionCountdownRow{color:#8fe8c0}.subscriptionCountdownRow.expired{color:#ff9b9b}
+
+/* Corrected responsive header: account control stays in the top row. */
+.nav{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px}
+.links{margin-left:0;justify-content:flex-end;min-width:0}
+.accountBtn{grid-column:3;grid-row:1}
+.search{grid-column:1/-1;grid-row:2;width:100%}
+@media(max-width:600px){
+  .nav{grid-template-columns:auto 1fr auto;gap:6px}
+  .logo{font-size:22px}
+  .links{gap:1px;justify-content:flex-end}
+  .links a{padding:7px 6px;font-size:14px}
+  .accountBtn{width:40px;height:38px;padding:0;font-size:0;display:grid;place-items:center}
+  .accountBtn::before{content:"👤";font-size:20px}
+  .search{width:100%;margin-top:2px}
+  .hero{padding:15px 0}
+  .heroBox{min-height:390px;padding:25px}
+}
+@media(max-width:390px){
+  .logo{font-size:20px}
+  .links a{padding:6px 4px;font-size:13px}
+  .accountBtn{width:36px;height:36px}
+}
+</style>
+</head>
+<body>
+<header><div class="wrap nav"><div class="logo">MYFLIX</div><div class="links"><a href="#home">Home</a><a href="#movies">Movies</a><a href="#series">Series</a></div><input id="search" class="search" placeholder="Search movies, series, genres..." type="search"><button id="accountBtn" class="accountBtn">👤 Create Account</button></div></header>
+
+<main class="wrap">
+<section id="home" class="hero"><div class="heroBox"><div><span class="badge">MARVEL&DC</span><h1>Your collection.<br>One place.</h1><p>Responsive movie and series interface with MP4 playback, separate subtitles, audio controls, seasons, episodes and fast search.</p><a class="btn primary" href="#movies">Explore Movies</a><a class="btn ghost" href="#series">Explore Series</a></div></div></section>
+
+<section id="movies"><div class="head"><div><h2>🎬 Movies</h2><div class="muted">MP4 playback • no download controls</div></div><div class="filters"><button class="filter active" data-filter="all">All</button><button class="filter" data-filter="new">New</button><button class="filter" data-filter="2026">2026</button><button class="filter" data-filter="2025">2025</button></div></div><div id="movieGrid" class="grid"></div><div id="movieEmpty" class="empty">No movies found.</div></section>
+
+<section id="series"><div class="head"><div><h2>📺 TV Series</h2><div class="muted">Seasons • episodes • MP4 player</div></div></div><div id="seriesGrid" class="seriesGrid"></div><div id="seriesEmpty" class="empty">No series found.</div></section>
+</main>
+<footer>MYFLIX • authorized streaming platform interface.</footer>
+
+
+<div id="accountModal" class="accountModal">
+  <div class="accountBox">
+    <div class="accountHead"><h3 id="accountTitle">Create Account</h3><button class="accountClose" id="accountClose">×</button></div>
+
+    <div id="createStep" class="accountStep active">
+      <p class="accountHint">Create an account first. Browsing movies and posters remains available without an account. A subscription is checked only when you choose Watch.</p>
+      <label for="accountName">Name</label>
+      <input id="accountName" type="text" maxlength="60" autocomplete="name" placeholder="Your name">
+      <label for="accountEmail">Email</label>
+      <input id="accountEmail" type="email" maxlength="120" autocomplete="email" placeholder="you@example.com">
+      <button id="createAccount" class="accountAction">Create Account</button>
+      <div id="createMsg" class="accountMsg"></div>
+    </div>
+
+    <div id="profileStep" class="accountStep">
+      <div class="profileGrid">
+        <div class="profileItem">👤 <span id="profileName"></span></div>
+        <div class="profileItem">✉️ <span id="profileEmail"></span></div>
+        <div class="profileItem">🔐 Subscription: <span id="subscriptionStatus">Not active</span></div>
+        <div class="profileItem" id="subscriptionCountdownRow">⏳ Time left: <span id="subscriptionCountdown">—</span></div>
+      </div>
+      <button id="subscriptionBtn" class="accountAction keyAction">🔑 Subscription Key</button>
+      <button id="signOutBtn" class="accountAction keyAction">Sign Out</button>
+      <div id="profileMsg" class="accountMsg"></div>
+    </div>
+
+    <div id="keyStep" class="accountStep">
+      <p class="accountHint">Enter your subscription key to activate viewing. The key is checked only for playback; movie posters and browsing stay public.</p>
+      <label for="subscriptionKey">Subscription Key</label>
+      <input id="subscriptionKey" type="password" maxlength="100" autocomplete="off" placeholder="Enter subscription key">
+      <button id="activateKey" class="accountAction">Activate Subscription</button>
+      <button id="backProfile" class="accountAction keyAction">Back to Profile</button>
+      <div id="keyMsg" class="accountMsg"></div>
+    </div>
+  </div>
+</div>
+
+<div id="modal" class="modal"><div class="player"><div class="phead"><b id="ptitle">Video Player</b><button class="close" id="close">×</button></div><div class="video"><video id="video" controls playsinline preload="metadata"></video></div><div class="controls">
+<button id="mute" class="control">🔊 Sound</button>
+<label class="control">Volume <input id="volume" class="range" type="range" min="0" max="1" step=".01" value="1"></label>
+<label class="control">Speed <select id="speed"><option>.5</option><option>.75</option><option selected>1</option><option>1.25</option><option>1.5</option><option>1.75</option><option>2</option></select></label>
+<label class="control">Subtitle <select id="sub"><option value="-1">Off</option><option value="0">English</option><option value="1">Malayalam</option><option value="2">Tamil</option><option value="3">Hindi</option></select></label>
+<label class="control">Audio <select id="audio"><option value="-1">Main</option><option value="0">Hindi</option><option value="1">Malayalam</option><option value="2">English</option><option value="3">Tamil</option></select></label>
+<button id="full" class="control">⛶ Fullscreen</button>
+</div><div class="hint">No download control is included anywhere. Separate .vtt subtitles are loaded by the player. Multi-audio switching requires actual separate audio tracks and browser support. For the most reliable four-language audio setup, use HLS with alternate audio tracks. Dolby playback depends on the browser/device codec support.</div></div></div>
+
+<script src="subscription.js" defer></script>
+<script>
+const movies=[
+{id:"m1",title:"Caption Marvel",year:"2019",genre:"Action • scifi",rating:"8.4",tag:"2019",new:false,poster:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLWpkf3sxeXJKRkZIyKtfLskt5WrQPlWLBwgEKWokJYjB5opUh9yAn9wg1kV-94wJluMlj&s=10",description:"Replace with your movie description.",video:"https://archive.org/download/captain-marvel-2019-720p-web-dl-x-265-hevc-hevcbay/Captain%20Marvel%202019%20720p%20WEB-DL%20x265%20HEVC-%20HEVCBay.mkv"},
+{id:"m2",title:"Spider Man Brand New Day",year:"2026",genre:"action • Thriller",rating:"8.1",tag:"NEW",new:true,poster:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzqaTkOWcI677xvtNGOKp8MgZkY1Rd8EQKDfo3KDLpnYQu6J--8TiMrT0&s=10",description:"Replace with your movie description.",video:"https://archive.org/download/spider-man.-brand.-new.-day.-2026.-hdts.v-3.1080p.x-265/Spider-Man.Brand.New.Day.2026.HDTS.v3.1080p.x265-Sunil-KITE-METeam.mkv"},
+{id:"m3",title:"Doctor Strange in the Multiverse of Madness",year:"2022",genre:"action • Thriller",rating:"6.3",tag:"2022",new:false,poster:"https://wafuu.com/cdn/shop/files/doctor-strange-in-the-multiverse-of-madness-4k-uhd-3d-blu-ray-set-4522220.jpg?v=1771417388",description:"Replace with your movie description.",video:"https://archive.org/download/doctor-strange-in-the-multiverse-of-madness-2022-3-d/Doctor%20Strange%20in%20the%20Multiverse%20of%20Madness%202022%20-%203D.ia.mp4"},
+{id:"m2",title:"Thor: Love and Thunder",year:"2022",genre:"action • Thriller",rating:"8.1",tag:"2022",new:false,poster:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_Jy45XZoxZ6M3zP75rUm7Q38yL4NiceW8HZ-qMf-O6QSgrUxW7kC2t01O&s=10",description:"Replace with your movie description.",video:"https://archive.org/download/thor-love-and-thunder_202601/Thor%20Love%20and%20Thunder%20%28uSer395x%29.rar/Thor%20Love%20and%20Thunder.mkv"},
+{id:"m4",title:"Spider-Man: Into the Spider-Verse",year:"2018",genre:"Adventure",rating:"8.5",tag:"2018",new:false,poster:"https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTBR2u759TwnFw08Ns8gYQdyDYtVi52SY5OVeFWnLgROWSbzMoL",description:"Replace with your movie description.",video:"https://archive.org/download/spider-man.-into.-the.-spider-verse.-2018.720p.-webrip.x-264-yts.-am/Spider-Man.Into.The.Spider-Verse.2018.720p.WEBRip.x264-%5BYTS.AM%5D.mp4"},
+{id:"m5",title:"Spider-Man: Homecoming",year:"2017",genre:"Adventure",rating:"8.5",tag:"2017",new:false,poster:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNZmizIrTaCcEfL-_EhNTpetuF8Ncgq70s7BIcY7xWXA&s=10",description:"Replace with your movie description.",video:"https://archive.org/download/spider-man-homecoming-u-ser-395x/Spider-Man%20Homecoming%20%28uSer395x%29.rar/Spider-Man%20Homecoming%20%28uSer395x%29.mkv"}
+
+
+];
+
+const series=[
+{id:"s1",title:"Stranger Things",year:"2016",rating:"8.6",genres:"Action • Mystery • horror",status:"COMPLETED",seasons:5,episodes:42,poster:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXQgidnZlU2rC4asetvfxMFXgZk6YNb2ykHh85uWoQZQCZoV3vOTxFaGFL&s=10",description:"In 1980s Indiana, a group of young friends witness supernatural forces and secret government exploits..",data:[
+{name:"Season 1",eps:[["Episode 1 — The Vanishing of Will Byers","48 min","https://archive.org/download/stranger-things-2016-2025/%E2%80%8ESTRANGER%20THINGS%20S1E01.mp4"],["Episode 2 — The Weirdo on Maple Street","55 min","https://archive.org/download/stranger-things-2016-2025/%E2%80%8ESTRANGER%20THINGS%20S1E02.mp4"],["Episode 3 — Holly Jolly ","51 min","https://archive.org/download/stranger-things-2016-2025/%E2%80%8ESTRANGER%20THINGS%20S1E03.mp4"],["Episode 4 — The Secret","50 min","https://archive.org/download/stranger-things-2016-2025/%E2%80%8ESTRANGER%20THINGS%20S1E05.mp4"],["Episode 5 — The Flea and the Acrobat","53 min","https://archive.org/download/stranger-things-2016-2025/%E2%80%8ESTRANGER%20THINGS%20S1E05.mp4"],["Episode 6 — The Monster","47 min","https://archive.org/download/stranger-things-2016-2025/%E2%80%8ESTRANGER%20THINGS%20S1E05.mp4"],["Episode 7 — The Bathtub ","43 min","https://archive.org/download/stranger-things-2016-2025/%E2%80%8ESTRANGER%20THINGS%20S1E07.mp4"],["Episode 8 — The Upside Down ","55 min","https://archive.org/download/stranger-things-2016-2025/%E2%80%8ESTRANGER%20THINGS%20S1E08.mp4"]]},
+{name:"Season 2",eps:[["Episode 1 — MADJACK","48 min","https://archive.org/download/stranger-things-2016-2025/STRANGER%20THINGS%20S2E01.mp4"],["Episode 2 — Trick or Treat, Freak","56 min","https://archive.org/download/stranger-things-2016-2025/STRANGER%20THINGS%20S2E02.mp4"],["Episode 3 — The Pollywog","51 min","https://archive.org/download/stranger-things-2016-2025/STRANGER%20THINGS%20S2E03.mp4"],["Episode 4 — Will the Wise ","46 min","https://archive.org/download/stranger-things-2016-2025/STRANGER%20THINGS%20S2E04.mp4"],["Episode 5 — Dig Dug ","58 min","https://archive.org/download/stranger-things-2016-2025/STRANGER%20THINGS%20S2E05.mp4"],["Episode 6 — The Spy","51 min","https://archive.org/download/stranger-things-2016-2025/STRANGER%20THINGS%20S2E06.mp4"],["Episode 7 — The Lost Sister","47 min","https://archive.org/download/stranger-things-2016-2025/STRANGER%20THINGS%20S2E07.mp4"],["Episode 8 — The Mind Flaye","48 min","https://archive.org/download/stranger-things-2016-2025/STRANGER%20THINGS%20S2E08.mp4"],,["Episode 9 — The Gate ","62 min","https://archive.org/download/stranger-things-2016-2025/STRANGER%20THINGS%20S2E09.mp4"]]},
+{name:"Season 3",eps:[["Episode 1 — Suzie, Do You Copy? ","51 min","https://archive.org/download/stranger-things-2016-2025/STRANGER%20THINGS%20S3E01.mp4"],["Episode 2 — The Mall Rats","50 min","https://archive.org/download/stranger-things-2016-2025/STRANGER%20THINGS%20S3E02.mp4"],["Episode 3 — The Case of the Missing Lifeguard ","49min","https://archive.org/download/stranger-things-2016-2025/STRANGER%20THINGS%20S3E03.mp4"],,["Episode 4 — The Sauna Test ","53 min","videos/series1/s1e2.mp4"],,["Episode 5 —  The Flayed","52 min","https://archive.org/download/stranger-things-2016-2025/STRANGER%20THINGS%20S3E05.mp4"],,["Episode 6 — E Pluribus Unum","60 min","https://archive.org/download/stranger-things-2016-2025/STRANGER%20THINGS%20S3E06.mp4"],,["Episode 7 — The Bite ","59 min","https://archive.org/download/stranger-things-2016-2025/STRANGER%20THINGS%20S3E07.mp4"],,["Episode 8 — The Battle of Starcourt","57 min","https://archive.org/download/stranger-things-2016-2025/STRANGER%20THINGS%20S3E08.mp4"]]},
+{name:"Season 4",eps:[["Episode 1 — The Hellfire Club ","1h 16 min","https://archive.org/download/stranger-things-2016-2025/STRANGER%20THINGS%20S4E01.mp4"],["Episode 2 —  Vecna's Curse","46 min","https://archive.org/download/stranger-things-2016-2025/STRANGER%20THINGS%20S4E02.mp4"],["Episode 3 — The Monster and the Superhero","1hr 3 min","https://archive.org/download/stranger-things-2016-2025/STRANGER%20THINGS%20S4E03.mp4"],["Episode 4 — Dear Billy","1hr 17 min","https://archive.org/download/stranger-things-2016-2025/STRANGER%20THINGS%20S4E04.mp4"],["Episode 5 — The Nina Project","1h 14 min","https://archive.org/download/stranger-things-2016-2025/STRANGER%20THINGS%20S4E05.mp4"],["Episode 6 — The Dive","1hr 13 min","https://archive.org/download/stranger-things-2016-2025/STRANGER%20THINGS%20S4E06.mp4"],["Episode 7 —The Massacre at Hawkins Lab ","1hr 38 min","https://archive.org/download/stranger-things-2016-2025/STRANGER%20THINGS%20S4E07.mp4"],["Episode 8 — Papa","1hr 25 min","https://archive.org/download/stranger-things-2016-2025/STRANGER%20THINGS%20S4E08.mp4"],["Episode 9 — The Piggyback","1hr 22 min","https://archive.org/download/stranger-things-2016-2025/STRANGER%20THINGS%20S4E09.mp4"]]},
+{name:"Season 5",eps:[["Episode 1 —  The Crawl","1hr 8 min","https://archive.org/download/stranger-things-season-5-episode-8/stranger-things-season-5-episode-1.mp4"],["Episode 2 — The Vanishing of Holly Wheeler","54 min","https://archive.org/download/stranger-things-season-5-episode-8/stranger-things-season-5-episode-2.mp4"],["Episode 3 — The Turnbow Trap","1hr 6 min","https://archive.org/download/stranger-things-season-5-episode-8/stranger-things-season-5-episode-3.mp4"],["Episode 4 — Sorcerer","1hr 23 min","https://archive.org/download/stranger-things-season-5-episode-8/stranger-things-season-5-episode-4.mp4"],["Episode 5 — Shock Jock","1hr 8 min","https://archive.org/download/stranger-things-season-5-episode-8/stranger-things-season-5-episode-5.mp4"],["Episode 6 —Escape from Camazotz ","1hr 15 min","https://archive.org/download/stranger-things-season-5-episode-8/stranger-things-season-5-episode-6.mp4"],["Episode 7 — The Bridge","1hr 6 min","https://archive.org/download/stranger-things-season-5-episode-8/stranger-things-season-5-episode-7.mp4"],["The Series Finale","2hr 8 min","https://archive.org/download/stranger-things-season-5-episode-8/stranger-things-season-5-episode-8.mp4"]]},
+]},
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{id:"s2",title:"Stranger Things: Tales From '85",year:"2026",rating:"5.9",genres:"Action • Mystery • horror",status:"ONGOING",seasons:2,episodes:3,poster:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQluJCdJ3qAuZscjJCPKS7iwnoICbhg6SM2gr51369wGw&s=10",description:"Eleven and the group face new hybrid monsters and remnants from the Upside Down surviving beneath the winter snow",data:[
+
+
+
+
+
+{name:"Season 1",eps:[["Episode 1 - Welcome to Hawkins","31 min","https://archive.org/download/netflix-original-series-stranger-things-tales-from-85-2026-season-01/Netflix%20Original%20Series%20Stranger%20Things%20Tales%20From%2085%20S01E01%20Chapter%20One%20Welcome%20To%20Hawkins%2C%20New%20Kid.mkv"],["Episode 2 —  Bad Harvest","32 min","https://archive.org/download/netflix-original-series-stranger-things-tales-from-85-2026-season-01/Netflix%20Original%20Series%20Stranger%20Things%20Tales%20From%2085%20S01E02%20Chapter%20Two%20Bad%20Harvest.mkv"],["Episode 3 —  Evolution","27 min","https://archive.org/download/netflix-original-series-stranger-things-tales-from-85-2026-season-01/Netflix%20Original%20Series%20Stranger%20Things%20Tales%20From%2085%20S01E03%20Chapter%20Three%20Evolution.mkv"],["Episode 4 — Evidence","46 min","https://archive.org/download/netflix-original-series-stranger-things-tales-from-85-2026-season-01/Netflix%20Original%20Series%20Stranger%20Things%20Tales%20From%2085%20S01E04%20Chapter%20Four%20The%20Confession.mkv"],["Episode 5 —The Weekly Watcher ","30 min","https://archive.org/download/netflix-original-series-stranger-things-tales-from-85-2026-season-01/Netflix%20Original%20Series%20Stranger%20Things%20Tales%20From%2085%20S01E05%20Chapter%20Five%20The%20Weekly%20Watcher.mkv"],["Episode 6 — A Storm Is Coming","30 min","https://archive.org/download/netflix-original-series-stranger-things-tales-from-85-2026-season-01/Netflix%20Original%20Series%20Stranger%20Things%20Tales%20From%2085%20S01E06%20Chapter%20Six%20A%20Storm%20Is%20Coming.mkv"],["Episode 7 —  Enter the Storm","30 min","https://archive.org/download/netflix-original-series-stranger-things-tales-from-85-2026-season-01/Netflix%20Original%20Series%20Stranger%20Things%20Tales%20From%2085%20S01E07%20Chapter%20Seven%20Enter%20The%20Storm.mkv"],["Episode 8 — The Party ","30 min","https://archive.org/download/netflix-original-series-stranger-things-tales-from-85-2026-season-01/Netflix%20Original%20Series%20Stranger%20Things%20Tales%20From%2085%20S01E08%20Chapter%20Eight%20The%20Party%20.mkv"],["Episode 9 — The Suspect","30 min","https://archive.org/download/netflix-original-series-stranger-things-tales-from-85-2026-season-01/Netflix%20Original%20Series%20Stranger%20Things%20Tales%20From%2085%20S01E09%20Chapter%20Nine%20The%20Suspect.mkv"],["Episode 10 — Countdown","30 min","https://archive.org/download/netflix-original-series-stranger-things-tales-from-85-2026-season-01/Netflix%20Original%20Series%20Stranger%20Things%20Tales%20From%2085%20S01E10%20Chapter%20Ten%20Countdown.mkv"]]},
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{name:"Season 2",eps:[["Episode 1 - A Haunting in Hawkins ","32 min","https://archive.org/download/stranger-things-tales-from-85-S02-2026/Stranger.Things.Tales.from.85.S02E01.1080p.WEB-DL.DUAL.5.1.ia.mp4"],["Episode 2 - The Mine","28 min","https://archive.org/download/stranger-things-tales-from-85-S02-2026/Stranger.Things.Tales.from.85.S02E02.1080p.WEB-DL.DUAL.5.1.ia.mp4"],["Episode 3 - The Curse of Bloodaxe Bill","25 min","https://archive.org/download/stranger-things-tales-from-85-S02-2026/Stranger.Things.Tales.from.85.S02E03.1080p.WEB-DL.DUAL.5.1.ia.mp4"],["Episode 4 - The Seance","27 min","https://archive.org/download/stranger-things-tales-from-85-S02-2026/Stranger.Things.Tales.from.85.S02E04.1080p.WEB-DL.DUAL.5.1.ia.mp4"],["Episode 5 - Split the Party","26 min","https://archive.org/download/stranger-things-tales-from-85-S02-2026/Stranger.Things.Tales.from.85.S02E05.1080p.WEB-DL.DUAL.5.1.ia.mp4"],["Episod 6 - The Lich ","27 min","https://archive.org/download/stranger-things-tales-from-85-S02-2026/Stranger.Things.Tales.from.85.S02E06.1080p.WEB-DL.DUAL.5.1.ia.mp4"],["Episode 7 - The Golem","26 min","https://archive.org/download/stranger-things-tales-from-85-S02-2026/Stranger.Things.Tales.from.85.S02E07.1080p.WEB-DL.DUAL.5.1.ia.mp4"],["Episode 8 - Count to Five","28 min","https://archive.org/download/stranger-things-tales-from-85-S02-2026/Stranger.Things.Tales.from.85.S02E08.1080p.WEB-DL.DUAL.5.1.ia.mp4"]]}
+
+
+
+
+
+
+
+
+
+
+]}
+];
+
+
+
+
+
+
+
+
+
+
+
+const movieGrid=document.querySelector("#movieGrid"),seriesGrid=document.querySelector("#seriesGrid");
+const movieEmpty=document.querySelector("#movieEmpty"),seriesEmpty=document.querySelector("#seriesEmpty");
+const modal=document.querySelector("#modal"),video=document.querySelector("#video"),ptitle=document.querySelector("#ptitle");
+function esc(s){return String(s).replaceAll("\\","\\\\").replaceAll("'","\\'")}
+function img(src,title){return `<img src="${src}" alt="${title}" onerror="this.outerHTML='<div class=fallback>POSTER</div>'">`}
+function renderMovies(list){
+ movieGrid.innerHTML=list.map(m=>`<article class=card><div class=poster>${img(m.poster,m.title)}<span class=tag>${m.tag}</span></div><div class=body><div class=title>${m.title}</div><div class=meta><span>⭐ ${m.rating}</span><span>${m.year}</span><span>${m.genre}</span></div><div class=desc>${m.description}</div><button class=watch onclick="openPlayer('${esc(m.video)}','${esc(m.title)}')">▶ Watch</button></div></article>`).join("");
+ movieEmpty.style.display=list.length?"none":"block";
+}
+function epsHTML(s){
+ return s.eps.map(e=>`<div class=ep><div><div class=epname>${e[0]}</div><div class=epsub>${e[1]}</div></div><button class=epwatch onclick="openPlayer('${esc(e[2])}','${esc(e[0])}')">▶ Watch</button></div>`).join("");
+}
+function renderSeries(list){
+ seriesGrid.innerHTML=list.map(s=>`<article class=series><div class=seriesTop><div class=seriesPoster>${img(s.poster,s.title)}</div><div class=info><span class=status>${s.status}</span><h3>${s.title}</h3><div class=meta><span class=rating>⭐ ${s.rating}</span><span>${s.year}</span></div><div class=meta>${s.genres}</div><div class=meta>📚 ${s.seasons} Seasons • 🎞 ${s.episodes} Episodes</div><div class=desc>${s.description}</div><div class=seasons>${s.data.map((x,i)=>`<button class="season ${i===0?"active":""}" onclick="season('${s.id}',${i},this)">Season ${i+1}</button>`).join("")}</div></div></div><div id="${s.id}eps" class=episodes>${epsHTML(s.data[0])}</div></article>`).join("");
+ seriesEmpty.style.display=list.length?"none":"block";
+}
+function season(id,i,b){
+ const s=series.find(x=>x.id===id);if(!s)return;
+ document.getElementById(id+"eps").innerHTML=epsHTML(s.data[i]);
+ b.parentElement.querySelectorAll(".season").forEach(x=>x.classList.remove("active"));b.classList.add("active");
+}
+function openPlayer(src,title){
+ if(!window.MyflixAuth || !window.MyflixAuth.canWatch()){
+  window.MyflixAuth?.promptForAccess();
+  return;
+ }
+ ptitle.textContent=title;
+ video.pause();video.removeAttribute("src");video.innerHTML="";
+ const source=document.createElement("source");source.src=src;source.type="video/mp4";video.appendChild(source);
+ [["english exaple .vtt"],["Malayalam","ml","subtitles/malayalam.vtt"],["Tamil","ta","subtitles/tamil.vtt"],["Hindi","hi","subtitles/hindi.vtt"]].forEach(x=>{
+  const t=document.createElement("track");t.kind="subtitles";t.label=x[0];t.srclang=x[1];t.src=x[2];video.appendChild(t);
+ });
+ video.volume=1;video.muted=false;volume.value=1;mute.textContent="🔊 Sound";sub.value="-1";audio.value="-1";
+ video.load();modal.classList.add("show");
+}
+function closePlayer(){video.pause();video.removeAttribute("src");video.load();modal.classList.remove("show")}
+document.querySelector("#close").onclick=closePlayer;modal.onclick=e=>{if(e.target===modal)closePlayer()};
+const volume=document.querySelector("#volume"),mute=document.querySelector("#mute"),speed=document.querySelector("#speed"),sub=document.querySelector("#sub"),audio=document.querySelector("#audio");
+volume.oninput=()=>{video.volume=+volume.value;video.muted=video.volume===0;mute.textContent=video.muted?"🔇 Muted":"🔊 Sound"};
+mute.onclick=()=>{video.muted=!video.muted;mute.textContent=video.muted?"🔇 Muted":"🔊 Sound"};
+speed.onchange=()=>video.playbackRate=+speed.value;
+sub.onchange=()=>[...video.textTracks].forEach((t,i)=>t.mode=(i===+sub.value?"showing":"disabled"));
+audio.onchange=()=>{
+ const tracks=video.audioTracks,index=+audio.value;
+ if(!tracks||!tracks.length){alert("This browser does not expose embedded MP4 audio tracks. Use HLS (.m3u8) with alternate Hindi, Malayalam, English and Tamil audio tracks for reliable switching.");audio.value="-1";return}
+ [...tracks].forEach((t,i)=>t.enabled=(index<0?i===0:i===index));
+};
+document.querySelector("#full").onclick=()=>document.fullscreenElement?document.exitFullscreen():document.querySelector(".video").requestFullscreen?.();
+
+document.querySelector("#search").oninput=e=>{
+ const q=e.target.value.toLowerCase().trim();
+ renderMovies(movies.filter(m=>(m.title+" "+m.year+" "+m.genre+" "+m.description).toLowerCase().includes(q)));
+ renderSeries(series.filter(s=>(s.title+" "+s.year+" "+s.genres+" "+s.status+" "+s.description).toLowerCase().includes(q)));
+};
+document.querySelectorAll(".filter").forEach(b=>b.onclick=()=>{
+ document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));b.classList.add("active");
+ const f=b.dataset.filter;renderMovies(f==="all"?movies:f==="new"?movies.filter(x=>x.new):movies.filter(x=>x.year===f));
+});
+renderMovies(movies);renderSeries(series);
+</script>
+</body>
+</html>
